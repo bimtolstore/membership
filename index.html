@@ -75,6 +75,11 @@
             margin-top: 10px;
             font-size: 14px;
         }
+        .lockout-message {
+            color: red;
+            margin-top: 10px;
+            font-size: 14px;
+        }
         /* Modal Styles */
         .modal {
             display: none; 
@@ -159,6 +164,7 @@
         </div>
         <input type="submit" value="Login">
         <div class="error" id="errorMessage"></div>
+        <div class="lockout-message" id="lockoutMessage"></div>
     </form>
     <div class="forgot-password-link">Lupa sandi?
         <a href="https://wa.me/6289508984455"><u>klik disini</u></a> untuk mengganti sandi
@@ -187,22 +193,54 @@
 </div>
 
 <script>
-    // Username dan password yang benar
     const correctUsername = "Chianna";
     const correctPassword = "sipendek123";
+    let failedAttempts = 0;
+    let lockout = false;
+
+    const lockoutMessage = document.getElementById('lockoutMessage');
+    const lockoutEndTimeKey = 'lockoutEndTime';
+    const lockoutDuration = 300000; // 2 minutes in milliseconds
+
+    // Initialize lockout state on page load
+    window.onload = () => {
+        const lockoutEndTime = localStorage.getItem(lockoutEndTimeKey);
+        if (lockoutEndTime) {
+            const remainingTime = new Date(lockoutEndTime) - new Date();
+            if (remainingTime > 0) {
+                lockout = true;
+                startCountdown(remainingTime);
+            } else {
+                localStorage.removeItem(lockoutEndTimeKey);
+            }
+        }
+    };
 
     function validateLogin() {
+        if (lockout) {
+            showErrorMessage("Anda saat ini terkunci untuk login!");
+            return false;
+        }
+
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
         if (username === correctUsername && password === correctPassword) {
-            // Menampilkan modal sukses
             showModal('successModal');
         } else {
-            // Menampilkan modal error
+            failedAttempts++;
+            if (failedAttempts >= 3) {
+                lockout = true;
+                const lockoutEndTime = new Date(new Date().getTime() + lockoutDuration);
+                localStorage.setItem(lockoutEndTimeKey, lockoutEndTime);
+                startCountdown(lockoutDuration);
+                showErrorMessage("Terlalu banyak percobaan yang salah, anda saat ini terkunci untuk login!");
+            } else {
+                showErrorMessage("Username atau password salah");
+            }
             showModal('errorModal');
         }
-        return false; // Mencegah form untuk submit secara default
+        return false;
     }
 
     function togglePasswordVisibility() {
@@ -219,6 +257,39 @@
         }
     }
 
+    function showErrorMessage(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = message;
+    }
+
+    function startCountdown(duration) {
+        const endTime = new Date().getTime() + duration;
+        updateCountdown(endTime);
+
+        const countdownInterval = setInterval(() => {
+            const now = new Date().getTime();
+            const remainingTime = endTime - now;
+
+            if (remainingTime <= 0) {
+                clearInterval(countdownInterval);
+                lockout = false;
+                failedAttempts = 0;
+                lockoutMessage.textContent = '';
+                localStorage.removeItem(lockoutEndTimeKey);
+            } else {
+                updateCountdown(endTime);
+            }
+        }, 1000);
+    }
+
+    function updateCountdown(endTime) {
+        const now = new Date().getTime();
+        const remainingTime = endTime - now;
+        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+        lockoutMessage.textContent = `Silahkan tunggu ${minutes} menit ${seconds} detik sebelum mencoba lagi`;
+    }
+
     function showModal(modalId) {
         const modal = document.getElementById(modalId);
         modal.style.display = "flex";
@@ -228,18 +299,15 @@
         const modal = document.getElementById(modalId);
         modal.style.display = "none";
         if (modalId === 'successModal') {
-            // Redirect ke halaman berikutnya setelah modal sukses ditutup
             window.location.href = "membership_chianna.html";
         }
     }
 
-    // Menutup modal saat klik di luar modal
     window.onclick = function(event) {
         const successModal = document.getElementById('successModal');
         const errorModal = document.getElementById('errorModal');
         if (event.target == successModal) {
             successModal.style.display = "none";
-            // Redirect ke halaman berikutnya setelah modal sukses ditutup
             window.location.href = "membership_chianna.html";
         } else if (event.target == errorModal) {
             errorModal.style.display = "none";

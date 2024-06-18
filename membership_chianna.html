@@ -230,6 +230,11 @@
 </div>
 
 <script>
+    // Cek apakah pengguna sudah masuk dari index.html
+    if (!sessionStorage.getItem('loggedIn')) {
+        // Jika belum, arahkan kembali ke index.html
+        window.location.href = 'index.html';
+    }
     const menuToggle = document.querySelector('.menu-toggle');
     const menu = document.querySelector('.menu');
 

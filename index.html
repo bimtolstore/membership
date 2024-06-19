@@ -198,6 +198,13 @@
     let failedAttempts = 0;
     let lockout = false;
 
+    const userInfo = {
+    Username: 'Chianna',
+    Password: 'sipendek123'
+    };
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    
+
     const lockoutMessage = document.getElementById('lockoutMessage');
     const lockoutEndTimeKey = 'lockoutEndTime';
     const lockoutDuration = 300000; // 2 minutes in milliseconds

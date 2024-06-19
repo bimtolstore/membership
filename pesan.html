@@ -254,6 +254,23 @@
     <p style="font-family: monospace; font-style: italic; text-align: center; font-size: 12px;">&copy; 2024 BiStore. All rights reserved.</p>
     <a href="https://wa.me/6285716518538" class="customer-service">
     <i class="fas fa-headset"></i></a>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isLoggedIn()) {
+                window.location.href = 'index.html'; // Redirect ke halaman login jika tidak ada info login
+            }
+        });
+
+        function isLoggedIn() {
+            // Periksa apakah info login ada di localStorage
+            const userInfo = localStorage.getItem('userInfo');
+            if (userInfo) {
+                const userInfoObj = JSON.parse(userInfo);
+                return userInfoObj.loggedIn === true; // Sesuaikan dengan struktur data Anda
+            }
+            return false;
+        }
+    </script>
 </div>
 </body>
 </html>

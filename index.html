@@ -200,17 +200,23 @@
 
     const lockoutMessage = document.getElementById('lockoutMessage');
     const lockoutEndTimeKey = 'lockoutEndTime';
-    const lockoutDuration = 300000; // 5 minutes in milliseconds
+    const lockoutDuration = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
+    // Initialize lockout state on page load
     window.onload = () => {
-        const lockoutEndTime = localStorage.getItem(lockoutEndTimeKey);
-        if (lockoutEndTime) {
-            const remainingTime = new Date(lockoutEndTime) - new Date();
-            if (remainingTime > 0) {
-                lockout = true;
-                startCountdown(remainingTime);
+        const userInfoString = localStorage.getItem('userInfo');
+        if (userInfoString) {
+            const userInfo = JSON.parse(userInfoString);
+            const loginTime = new Date(userInfo.loginTime);
+            const currentTime = new Date();
+            const elapsedTime = currentTime - loginTime;
+
+            if (elapsedTime < lockoutDuration) {
+                // User is still within the time limit
+                window.location.href = "membership_chianna.html";
             } else {
-                localStorage.removeItem(lockoutEndTimeKey);
+                // Clear the userInfo from localStorage
+                localStorage.removeItem('userInfo');
             }
         }
     };
@@ -227,8 +233,9 @@
         if (username === correctUsername && password === correctPassword) {
             const userInfo = {
                 username: username,
-                loggedIn: true
+                loginTime: new Date()
             };
+
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
             showModal('successModal');
         } else {
@@ -238,7 +245,7 @@
                 const lockoutEndTime = new Date(new Date().getTime() + lockoutDuration);
                 localStorage.setItem(lockoutEndTimeKey, lockoutEndTime);
                 startCountdown(lockoutDuration);
-                showErrorMessage("Terlalu banyak percobaan yang salah, Anda saat ini terkunci untuk login!");
+                showErrorMessage("Terlalu banyak percobaan yang salah, anda saat ini terkunci untuk login!");
             } else {
                 showErrorMessage("Username atau password salah");
             }
@@ -263,7 +270,7 @@
 
     function showErrorMessage(message) {
         const errorMessage = document.getElementById('errorMessage');
-        errorMessage.textContent= message;
+        errorMessage.textContent = message;
     }
 
     function startCountdown(duration) {
@@ -289,9 +296,10 @@
     function updateCountdown(endTime) {
         const now = new Date().getTime();
         const remainingTime = endTime - now;
+        const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-        lockoutMessage.textContent = `Silahkan tunggu ${minutes} menit ${seconds} detik sebelum mencoba lagi`;
+        lockoutMessage.textContent = `Silahkan tunggu ${hours} jam ${minutes} menit ${seconds} detik sebelum mencoba lagi`;
     }
 
     function showModal(modalId) {

@@ -15,6 +15,10 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            user-select: none; /* Menonaktifkan seleksi teks */
+        }
+        img {
+            pointer-events: none; /* Menonaktifkan klik kanan pada gambar */
         }
         .container {
             max-width: 900px;
@@ -52,6 +56,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 15px;
             position: relative;
+            cursor: pointer;
         }
         .chat-item img {
             height: 50px;
@@ -59,6 +64,7 @@
             border-radius: 50%;
             object-fit: cover;
             margin-right: 15px;
+            pointer-events: none; /* Menonaktifkan klik kanan pada gambar */
         }
         .chat-info {
             flex-grow: 1;
@@ -143,6 +149,9 @@
         .reply-form button:hover {
             background: #3949ab;
         }
+        .reply-form button:active {
+            background: #1a237e; /* Warna tombol saat diklik */
+        }
         .customer-service {
             position: fixed;
             bottom: 20px;
@@ -157,9 +166,13 @@
             align-items: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             cursor: pointer;
+            transition: background 0.3s;
         }
         .customer-service:hover {
             background: #3949ab;
+        }
+        .customer-service:active {
+            background: #1a237e; /* Warna tombol saat diklik */
         }
         .show-password {
             cursor: pointer;
@@ -237,7 +250,7 @@
             <div class="chat-time">Kemarin</div>
         </div>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <p style="font-family: monospace; font-style: italic; text-align: center; font-size: 12px;">&copy; 2024 BiStore. All rights reserved.</p>
     <a href="https://wa.me/6285716518538" class="customer-service">
     <i class="fas fa-headset"></i></a>

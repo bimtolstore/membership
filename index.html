@@ -225,108 +225,100 @@
             // Di sini Anda akan membandingkan dengan data yang disimpan atau permintaan ke server untuk verifikasi
             // Contoh sederhana:
             if (username === 'Chianna' && password === 'sipendek123') {
-                const userInfo = {
+                const userInfo= {
                     username: username,
                     loggedIn: true // Anda bisa menambahkan lebih banyak informasi jika diperlukan
                 };
                 
-                localStorage.setItem('userInfo', JSON.stringify(userInfo));out) {
-            showErrorMessage("Anda saat ini terkunci untuk login!");
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));
+                showModal('successModal');
+            } else {
+                failedAttempts++;
+                if (failedAttempts >= 3) {
+                    lockout = true;
+                    const lockoutEndTime = new Date(new Date().getTime() + lockoutDuration);
+                    localStorage.setItem(lockoutEndTimeKey, lockoutEndTime);
+                    startCountdown(lockoutDuration);
+                    showErrorMessage("Terlalu banyak percobaan yang salah, anda saat ini terkunci untuk login!");
+                } else {
+                    showErrorMessage("Username atau password salah");
+                }
+                showModal('errorModal');
+            }
             return false;
         }
 
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        if (username === correctUsername && password === correctPassword) {
-            showModal('successModal');
-        } else {
-            failedAttempts++;
-            if (failedAttempts >= 3) {
-                lockout = true;
-                const lockoutEndTime = new Date(new Date().getTime() + lockoutDuration);
-                localStorage.setItem(lockoutEndTimeKey, lockoutEndTime);
-                startCountdown(lockoutDuration);
-                showErrorMessage("Terlalu banyak percobaan yang salah, anda saat ini terkunci untuk login!");
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const passwordIcon = document.querySelector('.toggle-password');
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
             } else {
-                showErrorMessage("Username atau password salah");
+                passwordField.type = "password";
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
             }
-            showModal('errorModal');
         }
-        return false;
-    }
 
-    function togglePasswordVisibility() {
-        const passwordField = document.getElementById('password');
-        const passwordIcon = document.querySelector('.toggle-password');
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-            passwordIcon.classList.remove('fa-eye');
-            passwordIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordField.type = "password";
-            passwordIcon.classList.remove('fa-eye-slash');
-            passwordIcon.classList.add('fa-eye');
+        function showErrorMessage(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
         }
-    }
 
-    function showErrorMessage(message) {
-        const errorMessage = document.getElementById('errorMessage');
-        errorMessage.textContent = message;
-    }
+        function startCountdown(duration) {
+            const endTime = new Date().getTime() + duration;
+            updateCountdown(endTime);
 
-    function startCountdown(duration) {
-        const endTime = new Date().getTime() + duration;
-        updateCountdown(endTime);
+            const countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const remainingTime = endTime - now;
 
-        const countdownInterval = setInterval(() => {
+                if (remainingTime <= 0) {
+                    clearInterval(countdownInterval);
+                    lockout = false;
+                    failedAttempts = 0;
+                    lockoutMessage.textContent = '';
+                    localStorage.removeItem(lockoutEndTimeKey);
+                } else {
+                    updateCountdown(endTime);
+                }
+            }, 1000);
+        }
+
+        function updateCountdown(endTime) {
             const now = new Date().getTime();
             const remainingTime = endTime - now;
+            const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+            lockoutMessage.textContent = `Silahkan tunggu ${minutes} menit ${seconds} detik sebelum mencoba lagi`;
+        }
 
-            if (remainingTime <= 0) {
-                clearInterval(countdownInterval);
-                lockout = false;
-                failedAttempts = 0;
-                lockoutMessage.textContent = '';
-                localStorage.removeItem(lockoutEndTimeKey);
-            } else {
-                updateCountdown(endTime);
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = "flex";
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = "none";
+            if (modalId === 'successModal') {
+                window.location.href = "membership_chianna.html";
             }
-        }, 1000);
-    }
-
-    function updateCountdown(endTime) {
-        const now = new Date().getTime();
-        const remainingTime = endTime - now;
-        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-        lockoutMessage.textContent = `Silahkan tunggu ${minutes} menit ${seconds} detik sebelum mencoba lagi`;
-    }
-
-    function showModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.style.display = "flex";
-    }
-
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.style.display = "none";
-        if (modalId === 'successModal') {
-            window.location.href = "membership_chianna.html";
         }
-    }
 
-    window.onclick = function(event) {
-        const successModal = document.getElementById('successModal');
-        const errorModal = document.getElementById('errorModal');
-        if (event.target == successModal) {
-            successModal.style.display = "none";
-            window.location.href = "membership_chianna.html";
-        } else if (event.target == errorModal) {
-            errorModal.style.display = "none";
+        window.onclick = function(event) {
+            const successModal = document.getElementById('successModal');
+            const errorModal = document.getElementById('errorModal');
+            if (event.target == successModal) {
+                successModal.style.display = "none";
+                window.location.href = "membership_chianna.html";
+            } else if (event.target == errorModal) {
+                errorModal.style.display = "none";
+            }
         }
-    }
-</script>
+    </script>
 
 </body>
 </html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #74ebd5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            user-select: none; /* Menonaktifkan seleksi teks */
+        }
+        img {
+            pointer-events: none; /* Menonaktifkan klik kanan pada gambar */
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .header .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .chat-list {
+            margin-bottom: 30px;
+        }
+        .chat-item {
+            display: flex;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+        .chat-item img {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            pointer-events: none; /* Menonaktifkan klik kanan pada gambar */
+        }
+        .chat-info {
+            flex-grow: 1;
+        }
+        .chat-info h2 {
+            font-size: 18px;
+            margin: 0 0 5px 0;
+            color: #5c6bc0;
+        }
+        .chat-info p {
+            margin: 0;
+            color: #666;
+        }
+        .chat-time {
+            font-size: 14px;
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+        .unread-icon {
+            background: #5c6bc0;
+            color: #fff;
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+        }
+        .profile-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            text-align: left;
+            position: relative;
+        }
+        .profile-info h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #5c6bc0;
+        }
+        .profile-info p {
+            font-size: 16px;
+            color: #666;
+            margin: 10px 0;
+        }
+        .reply-form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            background: #eceff1;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .reply-form textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .reply-form button {
+            align-self: flex-end;
+            padding: 10px 20px;
+            color: #fff;
+            background: #5c6bc0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .reply-form button:hover {
+            background: #3949ab;
+        }
+        .reply-form button:active {
+            background: #1a237e; /* Warna tombol saat diklik */
+        }
+        .customer-service {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #5c6bc0;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .customer-service:hover {
+            background: #3949ab;
+        }
+        .customer-service:active {
+            background: #1a237e; /* Warna tombol saat diklik */
+        }
+        .show-password {
+            cursor: pointer;
+            color: #5c6bc0;
+            margin-left: 10px;
+        }
+        .show-password:hover {
+            color: #3949ab;
+        }
+        .message-sent {
+            background-color: #dcedc8;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .message-sent p {
+            margin: 0;
+            color: #4caf50;
+        }
+        .message-sent .original-message {
+            font-style: italic;
+        }
+        .message-sent .reply-message {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .profile-info {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <i class="fas fa-message"> Message</i>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+
+    <!-- Daftar Chat -->
+    <div class="chat-list">
+        <div class="chat-item" onclick="window.location.href='pesan_bimtol1'">
+            <img src="https://i.ibb.co.com/hXbMj3C/62-895-0898-4455-20240619-070750.jpg" alt="Profile">
+            <div class="chat-info">
+                <h2>BIMTOL</h2>
+                <p>Buka pesan ini ya nyett!!</p>
+            </div>
+            <div class="chat-time">14.00</div>
+            <div class="chat-unread">📌</div>
+        </div>
+        <div class="chat-item" onclick="window.location.href='pesan_hutao'">
+            <img src="https://img.alicdn.com/imgextra/i4/1797064093/O1CN01oaGvKE1g6dut0pICS_!!1797064093.png_.webp" alt="Profile">
+            <div class="chat-info">
+                <h2>Hu Tao</h2>
+                <p>Halo!! Saya istrinya Bimtol...</p>
+            </div>
+            <div class="chat-time">14.00</div>
+        </div>
+        <div class="chat-item" onclick="window.location.href='pesan_bot1'">
+            <img src="logo.png" alt="Profile">
+            <div class="chat-info">
+                <h2>Bot @BiStore</h2>
+                <p>Hi Beta Test! Selamat anda te...</p>
+            </div>
+            <div class="chat-time">14.00</div>
+        </div>
+    </div>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <p style="font-family: monospace; font-style: italic; text-align: center; font-size: 12px;">&copy; 2024 BiStore. All rights reserved.</p>
+    <a href="https://wa.me/6285716518538" class="customer-service">
+    <i class="fas fa-headset"></i></a>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isLoggedIn()) {
+                window.location.href = 'login.html'; // Redirect ke halaman login jika tidak ada info login
+            }
+        });
+
+        function isLoggedIn() {
+            // Periksa apakah info login ada di localStorage
+            const userInfo = localStorage.getItem('userInfo');
+            if (userInfo) {
+                const userInfoObj = JSON.parse(userInfo);
+                return userInfoObj.loggedIn === true; // Sesuaikan dengan struktur data Anda
+            }
+            return false;
+        }
+    </script>
+</div>
+</body>
+</html>

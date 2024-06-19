@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Profil</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #74ebd5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .header .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .profile-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            text-align: left;
+            position: relative;
+        }
+        .profile-info h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #5c6bc0;
+        }
+        .profile-info p {
+            font-size: 16px;
+            color: #666;
+            margin: 10px 0;
+        }
+        .profile-info .password-field {
+            display: flex;
+            align-items: center;
+        }
+        .profile-info .password-field input {
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #666;
+            margin-left: 10px;
+            flex: 1;
+        }
+        .profile-info .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background: #5c6bc0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .profile-info .btn:hover {
+            background: #3949ab;
+        }
+        .customer-service {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #5c6bc0;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+        .customer-service:hover {
+            background: #3949ab;
+        }
+        .show-password {
+            cursor: pointer;
+            color: #5c6bc0;
+            margin-left: 10px;
+        }
+        .show-password:hover {
+            color: #3949ab;
+        }
+
+        /* Media query untuk layar kecil */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .profile-info {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <i text-align="center" class="fas fa-user-circle">    PROFIL</i></p>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+    <div class="profile-info">
+        <h2>Profil Anda</h2>
+        <p><strong>Nama:</strong> Beta Tester</p>
+        <p><strong>Email:</strong> -</p>
+        <p><strong>No Telp:</strong> -</p>
+        <p><strong>Tanggal Lahir:</strong> Belum diatur</p>
+        <p><strong>Zodiac:</strong> Belum diatur</p>
+        <p><strong>Jenis Kelamin:</strong> Belum diatur</p>
+        <p><strong>Game yang dimainkan:</strong> Belum diatur</p>
+        <p><strong>UID Genshin:</strong> Belum diatur</p>
+        <p><strong>UID MLBB:</strong> Belum diatur</p>
+        <p><strong>Jenis Membership:</strong> VIP+</p>
+        <p><strong>Berlaku hingga:</strong> 20/06/2024</p>
+        <a href="http://telegram.me/BiStore1_bot" class="btn">Ubah Profil</a>
+    </div>
+    <div class="profile-info">
+        <h2>Detail Akun</h2>
+        <p><strong>Username:</strong> user1</p>
+        <div class="password-field">
+            <p><strong>Password:</strong></p>
+            <input type="password" id="password" value="123456" readonly>
+            <i class="fas fa-eye show-password" id="togglePassword"></i>
+        </div>
+        <p id="lastLogin"><strong>Terakhir Login:</strong></p>
+        <a href="http://telegram.me/BiStore1_bot" class="btn">Ubah Password</a>
+    </div>
+    <br>
+           <p style="font-family: monospace; font-style: italic; text-align: center; font-size: 12px;">&copy; 2024 BiStore. All rights reserved.</p>
+</div>
+
+<!-- Logo Customer Service -->
+<a href="https://wa.me/6285716518538" class="customer-service">
+    <i class="fas fa-headset"></i>
+</a>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isLoggedIn()) {
+                window.location.href = 'login.html'; // Redirect ke halaman login jika tidak ada info login
+            }
+        });
+
+        function isLoggedIn() {
+            // Periksa apakah info login ada di localStorage
+            const userInfo = localStorage.getItem('userInfo');
+            if (userInfo) {
+                const userInfoObj = JSON.parse(userInfo);
+                return userInfoObj.loggedIn === true; // Sesuaikan dengan struktur data Anda
+            }
+            return false;
+        }
+    
+    const menuToggle = document.querySelector('.menu-toggle');
+    const container = document.querySelector('.container');
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    const lastLogin = document.getElementById('lastLogin');
+
+    menuToggle.addEventListener('click', () => {
+        container.classList.toggle('show-menu');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!container.contains(e.target) && !menuToggle.contains(e.target)) {
+            container.classList.remove('show-menu');
+        }
+    });
+
+    togglePassword.addEventListener('click', () => {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        togglePassword.classList.toggle('fa-eye');
+        togglePassword.classList.toggle('fa-eye-slash');
+    });
+
+    // Fungsi untuk memperbarui waktu terakhir login
+    function updateLastLogin() {
+        const now = new Date();
+        const dateFormatted = `${now.getDate()} ${getMonthName(now.getMonth())} ${now.getFullYear()}`;
+        const timeFormatted = `${padZero(now.getHours())}:${padZero(now.getMinutes())}`;
+        lastLogin.textContent = `Terakhir Masuk: ${dateFormatted} ${timeFormatted}`;
+    }
+
+    // Fungsi untuk mendapatkan nama bulan berdasarkan indeks bulan
+    function getMonthName(monthIndex) {
+        const monthNames = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+        return monthNames[monthIndex];
+    }
+
+    // Fungsi untuk menambah nol pada angka satu digit (untuk menampilkan waktu dalam format dua digit)
+    function padZero(num) {
+        return num.toString().padStart(2, '0');
+    }
+
+    updateLastLogin(); // Panggil fungsi untuk menetapkan waktu saat halaman dimuat
+</script>
+
+</body>
+</html>

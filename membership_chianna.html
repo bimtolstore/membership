@@ -230,6 +230,10 @@
 </div>
 
 <script>
+    if (!localStorage.getItem('userInfo')) {
+    window.location.href = 'index.html';
+    }
+    
     const menuToggle = document.querySelector('.menu-toggle');
     const menu = document.querySelector('.menu');
 

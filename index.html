@@ -195,57 +195,36 @@
 <script>
     const correctUsername = "Chianna";
     const correctPassword = "sipendek123";
-    let failedAttempts = 0;
-    let lockout = false;
-
-    const lockoutMessage = document.getElementById('lockoutMessage');
-    const lockoutEndTimeKey = 'lockoutEndTime';
     const lockoutDuration = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+    let failedAttempts = 0;
+    let lockoutEndTime = null;
 
     // Initialize lockout state on page load
     window.onload = () => {
-        const userInfoString = localStorage.getItem('userInfo');
-        if (userInfoString) {
-            const userInfo = JSON.parse(userInfoString);
-            const loginTime = new Date(userInfo.loginTime);
-            const currentTime = new Date();
-            const elapsedTime = currentTime - loginTime;
-
-            if (elapsedTime < lockoutDuration) {
-                // User is still within the time limit
-                window.location.href = "membership_chianna.html";
-            } else {
-                // Clear the userInfo from localStorage
-                localStorage.removeItem('userInfo');
-            }
+        lockoutEndTime = localStorage.getItem('lockoutEndTime');
+        if (lockoutEndTime && new Date(lockoutEndTime) > new Date()) {
+            lockout();
         }
     };
 
     function validateLogin() {
-        if (lockout) {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (lockoutEndTime && new Date(lockoutEndTime) > new Date()) {
             showErrorMessage("Anda saat ini terkunci untuk login!");
             return false;
         }
 
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
         if (username === correctUsername && password === correctPassword) {
-            const userInfo = {
-                username: username,
-                loginTime: new Date()
-            };
-
-            localStorage.setItem('userInfo', JSON.stringify(userInfo));
+            const loginTime = new Date().getTime();
+            localStorage.setItem('userInfo', JSON.stringify({ username, loginTime }));
             showModal('successModal');
         } else {
             failedAttempts++;
             if (failedAttempts >= 3) {
-                lockout = true;
-                const lockoutEndTime = new Date(new Date().getTime() + lockoutDuration);
-                localStorage.setItem(lockoutEndTimeKey, lockoutEndTime);
-                startCountdown(lockoutDuration);
-                showErrorMessage("Terlalu banyak percobaan yang salah, anda saat ini terkunci untuk login!");
+                lockout();
+                showErrorMessage("Terlalu banyak percobaan yang salah, Anda saat ini terkunci untuk login!");
             } else {
                 showErrorMessage("Username atau password salah");
             }
@@ -254,50 +233,32 @@
         return false;
     }
 
-    function togglePasswordVisibility() {
-        const passwordField = document.getElementById('password');
-        const passwordIcon = document.querySelector('.toggle-password');
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-            passwordIcon.classList.remove('fa-eye');
-            passwordIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordField.type = "password";
-            passwordIcon.classList.remove('fa-eye-slash');
-            passwordIcon.classList.add('fa-eye');
-        }
+    function lockout() {
+        lockoutEndTime = new Date().getTime() + lockoutDuration;
+        localStorage.setItem('lockoutEndTime', lockoutEndTime);
+        startCountdown();
     }
 
-    function showErrorMessage(message) {
-        const errorMessage = document.getElementById('errorMessage');
-        errorMessage.textContent = message;
-    }
-
-    function startCountdown(duration) {
-        const endTime = new Date().getTime() + duration;
-        updateCountdown(endTime);
-
+    function startCountdown() {
         const countdownInterval = setInterval(() => {
             const now = new Date().getTime();
-            const remainingTime = endTime - now;
+            const remainingTime = lockoutEndTime - now;
 
             if (remainingTime <= 0) {
                 clearInterval(countdownInterval);
-                lockout = false;
+                localStorage.removeItem('lockoutEndTime');
+                lockoutEndTime = null;
                 failedAttempts = 0;
                 lockoutMessage.textContent = '';
-                localStorage.removeItem(lockoutEndTimeKey);
             } else {
                 updateCountdown(remainingTime);
             }
         }, 1000);
     }
 
-    function updateCountdown(endTime) {
-        const now = new Date().getTime();
-        const remainingTime = endTime - now;
+    function updateCountdown(remainingTime) {
         const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        const minutes = Math.floor((remainingTime % * 60) / (1000 * 60));
         const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
         lockoutMessage.textContent = `Silahkan tunggu ${hours} jam ${minutes} menit ${seconds} detik sebelum mencoba lagi`;
     }
@@ -324,6 +285,25 @@
         } else if (event.target === errorModal) {
             errorModal.style.display = "none";
         }
+    }
+
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const passwordIcon = document.querySelector('.toggle-password');
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            passwordIcon.classList.remove('fa-eye');
+            passwordIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = "password";
+            passwordIcon.classList.remove('fa-eye-slash');
+            passwordIcon.classList.add('fa-eye');
+        }
+    }
+
+    function showErrorMessage(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = message;
     }
 </script>
 

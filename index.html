@@ -195,35 +195,49 @@
 <script>
     const correctUsername = "Chianna";
     const correctPassword = "sipendek123";
-    const lockoutDuration = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
     let failedAttempts = 0;
-    let lockoutEndTime = null;
+    let lockout = false;
 
-    // Initialize lockout state on page load
+    const lockoutMessage = document.getElementById('lockoutMessage');
+    const lockoutEndTimeKey = 'lockoutEndTime';
+    const lockoutDuration = 300000; // 5 minutes in milliseconds
+
     window.onload = () => {
-        lockoutEndTime = localStorage.getItem('lockoutEndTime');
-        if (lockoutEndTime && new Date(lockoutEndTime) > new Date()) {
-            lockout();
+        const lockoutEndTime = localStorage.getItem(lockoutEndTimeKey);
+        if (lockoutEndTime) {
+            const remainingTime = new Date(lockoutEndTime) - new Date();
+            if (remainingTime > 0) {
+                lockout = true;
+                startCountdown(remainingTime);
+            } else {
+                localStorage.removeItem(lockoutEndTimeKey);
+            }
         }
     };
 
     function validateLogin() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        if (lockoutEndTime && new Date(lockoutEndTime) > new Date()) {
+        if (lockout) {
             showErrorMessage("Anda saat ini terkunci untuk login!");
             return false;
         }
 
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
         if (username === correctUsername && password === correctPassword) {
-            const loginTime = new Date().getTime();
-            localStorage.setItem('userInfo', JSON.stringify({ username, loginTime }));
+            const userInfo = {
+                username: username,
+                loggedIn: true
+            };
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
             showModal('successModal');
         } else {
             failedAttempts++;
             if (failedAttempts >= 3) {
-                lockout();
+                lockout = true;
+                const lockoutEndTime = new Date(new Date().getTime() + lockoutDuration);
+                localStorage.setItem(lockoutEndTimeKey, lockoutEndTime);
+                startCountdown(lockoutDuration);
                 showErrorMessage("Terlalu banyak percobaan yang salah, Anda saat ini terkunci untuk login!");
             } else {
                 showErrorMessage("Username atau password salah");
@@ -233,34 +247,51 @@
         return false;
     }
 
-    function lockout() {
-        lockoutEndTime = new Date().getTime() + lockoutDuration;
-        localStorage.setItem('lockoutEndTime', lockoutEndTime);
-        startCountdown();
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password');
+        const passwordIcon = document.querySelector('.toggle-password');
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            passwordIcon.classList.remove('fa-eye');
+            passwordIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = "password";
+            passwordIcon.classList.remove('fa-eye-slash');
+            passwordIcon.classList.add('fa-eye');
+        }
     }
 
-    function startCountdown() {
+    function showErrorMessage(message) {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent= message;
+    }
+
+    function startCountdown(duration) {
+        const endTime = new Date().getTime() + duration;
+        updateCountdown(endTime);
+
         const countdownInterval = setInterval(() => {
             const now = new Date().getTime();
-            const remainingTime = lockoutEndTime - now;
+            const remainingTime = endTime - now;
 
             if (remainingTime <= 0) {
                 clearInterval(countdownInterval);
-                localStorage.removeItem('lockoutEndTime');
-                lockoutEndTime = null;
+                lockout = false;
                 failedAttempts = 0;
                 lockoutMessage.textContent = '';
+                localStorage.removeItem(lockoutEndTimeKey);
             } else {
                 updateCountdown(remainingTime);
             }
         }, 1000);
     }
 
-    function updateCountdown(remainingTime) {
-        const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((remainingTime % * 60) / (1000 * 60));
+    function updateCountdown(endTime) {
+        const now = new Date().getTime();
+        const remainingTime = endTime - now;
+        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-        lockoutMessage.textContent = `Silahkan tunggu ${hours} jam ${minutes} menit ${seconds} detik sebelum mencoba lagi`;
+        lockoutMessage.textContent = `Silahkan tunggu ${minutes} menit ${seconds} detik sebelum mencoba lagi`;
     }
 
     function showModal(modalId) {
@@ -285,25 +316,6 @@
         } else if (event.target === errorModal) {
             errorModal.style.display = "none";
         }
-    }
-
-    function togglePasswordVisibility() {
-        const passwordField = document.getElementById('password');
-        const passwordIcon = document.querySelector('.toggle-password');
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-            passwordIcon.classList.remove('fa-eye');
-            passwordIcon.classList.add('fa-eye-slash');
-        } else {
-            passwordField.type = "password";
-            passwordIcon.classList.remove('fa-eye-slash');
-            passwordIcon.classList.add('fa-eye');
-        }
-    }
-
-    function showErrorMessage(message) {
-        const errorMessage = document.getElementById('errorMessage');
-        errorMessage.textContent = message;
     }
 </script>
 

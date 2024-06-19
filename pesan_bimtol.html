@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #74ebd5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .header .menu-toggle {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .profile-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            text-align: left;
+            position: relative;
+        }
+        .profile-info h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #5c6bc0;
+        }
+        .profile-info p {
+            font-size: 16px;
+            color: #666;
+            margin: 10px 0;
+        }
+        .reply-form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            background: #eceff1;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .reply-form textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .reply-form button {
+            align-self: flex-end;
+            padding: 10px 20px;
+            color: #fff;
+            background: #5c6bc0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .reply-form button:hover {
+            background: #3949ab;
+        }
+        .customer-service {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #5c6bc0;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+        .customer-service:hover {
+            background: #3949ab;
+        }
+        .show-password {
+            cursor: pointer;
+            color: #5c6bc0;
+            margin-left: 10px;
+        }
+        .show-password:hover {
+            color: #3949ab;
+        }
+        .message-sent {
+            background-color: #dcedc8;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .message-sent p {
+            margin: 0;
+            color: #4caf50;
+        }
+        .message-sent .original-message {
+            font-style: italic;
+        }
+        .message-sent .reply-message {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 20px;
+            }
+            .profile-info {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+    <a href="pesan.html">
+        <i class="fas fa-sign-out"></a></i>
+        <h2>   BIMTOL TAMVAN</h2>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+        <div class="profile-info" id="message1">
+        <p id="message-content-4">woyy cill skrg aku dah ngerti cara kirim pesan, meskipun ga otomatis siee ada manual nya dikit, coba aja deh cil!! Balas pesan ini dimenu bawah isi apa aja sesuai hatimu, trs kalo udh klik kirim balasan, nanti otomatis ke wa trs kamu kirim ya ke aku, kalo ga kirim aku gatau, nanti balik lagi ke sini nanti bakal ada history pesan yg udh pernah kamu kirim dipaling bawah yah! itu tersimpan di browser mu!! kalo browsermu diapus data history nya jg ilang!!</p>
+        <p><strong>Tanggal:</strong> 19 Juni 2024, 06.16 WIB</p>
+        <p id="message-code-4"><strong>Kode Pesan:</strong> MSG-62177</p>
+        <div id="message-status-4"></div>
+        <form class="reply-form" onsubmit="sendReply(event, 'message-code-4', 'message-content-4', 'message-status-4')">
+            <textarea id="reply-text-1" rows="3" placeholder="Ketik disini ya cil..." required></textarea>
+            <button type="submit">Kirim Balasan</button>
+        </form>
+    </div>
+    <div class="profile-info" id="message1">
+        <p id="message-content-1">Woyy cill!! orang terpendek dimata bimtol, istri nya kazuha (katanya) pasti lagi baca ini ya? wkwkwk, cuih aku belum bisa dan belum mengerti buat nambahin menu balas pesan😔, Next aku belajar lagi, jadii kalo kamu mau bales pesan ss pesannya trs bales lewat wa aja yaaa!!</p>
+        <p id="message-code-1"><strong>Kode Pesan:</strong> MSG-72718</p>
+        <p><strong>Tanggal:</strong> 18 Juni 2024, 10.12 WIB</p>
+        <div id="message-status-1"></div>
+        <form class="reply-form" onsubmit="sendReply(event, 'message-code-1', 'message-content-1', 'message-status-1')">
+            <textarea id="reply-text-1" rows="3" placeholder="Ketik disini ya cil..." required></textarea>
+            <button type="submit">Kirim Balasan</button>
+        </form>
+    </div>
+    <div id="sent-messages-container"></div> <!-- Container untuk menampilkan pesan-pesan yang sudah dikirim -->
+    <br>
+    <p style="font-family: monospace; font-style: italic; text-align: center; font-size: 12px;">&copy; 2024 BiStore. All rights reserved.</p>
+</div>
+
+<!-- Logo Customer Service -->
+<a href="https://wa.me/6285716518538" class="customer-service">
+    <i class="fas fa-headset"></i>
+</a>
+
+<script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const container = document.querySelector('.container');
+
+    menuToggle.addEventListener('click', () => {
+        container.classList.toggle('show-menu');
+    });
+
+    // Fungsi untuk mengirim balasan dan menampilkan pesan terkirim di halaman serta menyimpan ke localStorage
+    function sendReply(event, codeId, contentId, statusId) {
+        event.preventDefault();
+
+        const textarea = event.target.querySelector('textarea');
+        const replyMessage = textarea.value.trim();
+
+        if (replyMessage === "") {
+            alert("Mohon isi balasan terlebih dahulu.");
+            return;
+        }
+
+        const messageCode = document.getElementById(codeId).textContent.trim();
+        const originalMessage = document.getElementById(contentId).textContent.trim();
+
+        // Simpan pesan terkirim ke localStorage
+        const sentMessage = {
+            code: messageCode,
+            original: originalMessage,
+            reply: replyMessage,
+            date: new Date().toLocaleString()
+        };
+
+        const sentMessages = JSON.parse(localStorage.getItem('sentMessages')) || [];
+        sentMessages.push(sentMessage);
+        localStorage.setItem('sentMessages', JSON.stringify(sentMessages));
+
+        // Tampilkan pesan terkirim di halaman
+        const messageStatus = document.getElementById(statusId);
+        messageStatus.innerHTML = `
+            <div class="message-sent">
+                <p>Pesan telah terkirim ke WhatsApp:</p>
+                <div class="original-message">${originalMessage}</div>
+                <div class="reply-message">Balasan: ${replyMessage}</div>
+                <div class="sent-time">Waktu Terkirim: ${sentMessage.date}</div>
+            </div>
+        `;
+
+        // Bersihkan textarea setelah mengirim balasan
+        textarea.value = "";
+
+        // Buka WhatsApp dengan pesan yang disiapkan
+        const whatsappMessage = `Kode Pesan: ${messageCode}\nPesan Asli: ${originalMessage}\nBalasan: ${replyMessage}`;
+        const whatsappURL = `https://wa.me/6289508984455/?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappURL, '_blank');
+
+        // Tampilkan pesan terkirim di bagian bawah halaman
+        displaySentMessages();
+    }
+
+    // Fungsi untuk menampilkan pesan terkirim yang tersimpan di localStorage
+    function displaySentMessages() {
+        const sentMessagesContainer = document.getElementById('sent-messages-container');
+        const sentMessages = JSON.parse(localStorage.getItem('sentMessages')) || [];
+
+        sentMessagesContainer.innerHTML = '<div class="profile-info"><h2>History Pengiriman Pesan :</h2>';
+
+        sentMessages.forEach((message, index) => {
+            sentMessagesContainer.innerHTML += `
+                <div class="message-sent" id="sent-message-${index}">
+                    <p><strong>Kode Pesan:</strong> ${message.code}</p>
+                    <p><strong>Pesan Asli:</strong> ${message.original}</p>
+                    <p><strong>Balasan:</strong> ${message.reply}</p>
+                    <p><strong>Waktu Terkirim:</strong> ${message.date}</p>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // Fungsi untuk memperbarui waktu terakhir login
+    function updateLastLogin() {
+        const now = new Date();
+        const dateFormatted = `${now.getDate()} ${getMonthName(now.getMonth())} ${now.getFullYear()}`;
+        const timeFormatted = `${padZero(now.getHours())}:${padZero(now.getMinutes())}`;
+        lastLogin.textContent = `Terakhir Masuk: ${dateFormatted} ${timeFormatted}`;
+    }
+
+    // Fungsi untuk mendapatkan nama bulan berdasarkan indeks bulan
+    function getMonthName(monthIndex) {
+        const monthNames = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+        return monthNames[monthIndex];
+    }
+
+    // Fungsi untuk menambah nol pada angka satu digit (untuk menampilkan waktu dalam format dua digit)
+    function padZero(num) {
+        return num.toString().padStart(2, '0');
+    }
+
+    // Tampilkan pesan terkirim saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+        displaySentMessages();
+        updateLastLogin(); // Panggil fungsi untuk menetapkan waktu saat halaman dimuat
+    });
+
+</script>
+
+</body>
+</html>

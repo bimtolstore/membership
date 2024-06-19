@@ -198,13 +198,6 @@
     let failedAttempts = 0;
     let lockout = false;
 
-    const userInfo = {
-    Username: 'Chianna',
-    Password: 'sipendek123'
-    };
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
-    
-
     const lockoutMessage = document.getElementById('lockoutMessage');
     const lockoutEndTimeKey = 'lockoutEndTime';
     const lockoutDuration = 300000; // 2 minutes in milliseconds
@@ -224,7 +217,20 @@
     };
 
     function validateLogin() {
-        if (lockout) {
+        if (lockfunction login() {
+            // Simulasi autentikasi sederhana (biasanya menggunakan backend yang sesungguhnya)
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Di sini Anda akan membandingkan dengan data yang disimpan atau permintaan ke server untuk verifikasi
+            // Contoh sederhana:
+            if (username === 'Chianna' && password === 'sipendek123') {
+                const userInfo = {
+                    username: Chianna,
+                    loggedIn: true // Anda bisa menambahkan lebih banyak informasi jika diperlukan
+                };
+                
+                localStorage.setItem('userInfo', JSON.stringify(userInfo));out) {
             showErrorMessage("Anda saat ini terkunci untuk login!");
             return false;
         }
